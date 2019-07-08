@@ -3,6 +3,7 @@
 #define PA05_H
 #include "constant.h"
 #include <stdbool.h>
+#define NAME_LENGTH 80
 
 // create a structure type that has the following attributes
 // please make sure the names are exactly the same
@@ -11,12 +12,9 @@
 //  char- lastname[NAME_LENGTH]
 typedef struct
 {
-
-
-
-
-
-
+  int ID;
+  char firstname[NAME_LENGTH];
+  char lastname[NAME_LENGTH];
 } Student;
 
 // functions to be implemented
