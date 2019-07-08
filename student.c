@@ -59,14 +59,13 @@ bool StudentRead(char * filename, Student * * stu, int * numelem)
   
   // check whether memory allocation fails
   
- if (stu = NULL)
+ if (fptr = NULL)
   return EXIT_FAILURE;
 
   // read the data from the file and store the data in the allocated memory
   int i;
   for( i = 0; ind < numelem; i++){
-   fscanf(fptr, "%d %s %s\n", &stu[i].ID, &stu[i].firstname, & stu[i].lastname);
-
+   fscanf(fptr, "%d %s %s\n", &stu[i].ID, stu[i].firstname, stu[i].lastname);
 }
   // close the file
   fclose(fptr);
@@ -85,7 +84,7 @@ bool StudentRead(char * filename, Student * * stu, int * numelem)
 bool StudentWrite(char * filename, Student * stu, int numelem)
 {
    // open the file to read
-  FILE * outptr = fopen(filename, "r");
+  FILE * outptr = fopen(filename, "w");
    if (outptr == NULL)
     {
       return false; // if fopen fails, return false

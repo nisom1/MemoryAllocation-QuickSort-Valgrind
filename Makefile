@@ -1,28 +1,31 @@
 # You need to write this file so that
-CFLAGS = -std=c99 -g -Wall -Wshadow --pedantic -Wvla -Werror
+CFLAGS = -std=c99 -g -Wall -Wshadow --pedantic -Wvla -Werror -fprofile-arcs -ftestcoverage
 COVFLAGS = -fprofile-arcs -ftest-coverage
 PROFFLAG = -pg
-GCC = gcc $(CFLAGS) # $(COVFLAGS) $(PROFFLAG)
-
+DFLAGS = -DTEST_READ -DTEST_WRITE -DTEST_SORTID -DTEST_SORTFIRSTNAME -DTEST_SORTLASTNAME
+VALS = valgrind --tool=memcheck --leak-check=full 
+GCC = gcc $(CFLAGS) $(DFLAGS) $(VALS) $(COVFLAGS) $(PROFFLAG)
 
 # "make" will create an executable called pa05
 all: pa05
 
 # "make test" will run the three input files 
-pa05: pa05-input1 pa05-input2 pa05-input3
+pa05: test1 test2 test3
 
 .c.o:
-	$(GCC) $(CFLAGS) -c $*.c 
+	$(GCC) $(CFLAGS) $(DFLAGS) -c $*.c 
 
-pa05-test1: pa05
+test: test1 test2 test3 compare
+
+test1: pa05 compare
 	echo "testing input file1"
 	./pa05 inputs/testinput1 testdir/id1 testdir/first1 testdir/last1 
-pa05-test2: pa05
+test2: pa05 compare
 	echo "testing input file2"
-	./pa05 inputs/testinput2 
-pa05-test3: pa05
+	./pa05 inputs/testinput2 testdir/id1 testdir/first2 testdir/last2 
+test3: pa05 compare
 	echo "testing input file3"
-	./pa05 inputs/testinput3 
+	./pa05 inputs/testinput3 testdir/id3 testdir/first3 testdir/last3
 # input: inputs/testinput1; output: id1, first1, last1
 # input: inputs/testinput2; output: id2, first2, last2
 # input: inputs/testinput3; output: id3, first3, last3
@@ -42,13 +45,22 @@ compare:
 	diff last3 expected/last3
 
 # "make memory" calls valgrind to check memory errors
-memory: 
-	valgrind ./pa05
+memory: pa05
+	$(VALS) ./pa05 inputs/testinput1 testdir/id1 testdir/first1 testdir/last1
+	$(VALS) ./pa05 inputs/testinput2 testdir/id2 testdir/first2 testdir/last2
+	$(VALS) ./pa05 inputs/testinput3 testdir/id3 testdir/first3 testdir/last3
+ 
+
+pa05.o: pa05.c student.h
+	$(GCC) $(DFLAGS) -c pa05.c
+
+student.o: student.c 
+	$(GCC) $(VALS) -c student.c
 
 testdir: 
 	mkdir -p testdir
+
 # "make clean" remove .o and all output files
 clean: 
 	/bin/rm -f *.o
-	/bin/rm -f 
-
+	/bin/rm -f *.gcda *.gcno gmon.out *gcov
