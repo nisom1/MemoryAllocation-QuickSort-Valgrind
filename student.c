@@ -55,17 +55,17 @@ bool StudentRead(char * filename, Student * * stu, int * numelem)
   fptr = fopen(filename, "r");
 
  // allocate memory for the data
-  stu = malloc(sizeof(Student) * numelem);
+  (*stu) = malloc(sizeof(Student) * (*numelem));
   
   // check whether memory allocation fails
   
- if (fptr = NULL)
+ if ( (*stu) == NULL)
   return EXIT_FAILURE;
 
   // read the data from the file and store the data in the allocated memory
-  int i;
-  for( i = 0; ind < numelem; i++){
-   fscanf(fptr, "%d %s %s\n", &stu[i].ID, stu[i].firstname, stu[i].lastname);
+  int i = 0;
+  for( i = 0; i < (*numelem); i++){
+   fscanf(fptr, "%d %s %s\n", &stu[i]->ID, stu[i]->firstname, stu[i]->lastname);
 }
   // close the file
   fclose(fptr);
@@ -91,11 +91,13 @@ bool StudentWrite(char * filename, Student * stu, int numelem)
     } // do not use fclose since fopen already fails
 
   // write the students to the output file  
-  for( i = 0; ind < numelem; i++){
+  int i = 0;
+  for( i = 0; i < numelem; i++){
    fprintf(outptr, "%d %s %s\n", stu[i].ID, stu[i].firstname, stu[i].lastname);
 
 }
-
+  fclose(outptr);
+  return true;
 }
 #endif 
 
@@ -104,11 +106,7 @@ int comparefuncint(const void * arg1, const void * arg2)
 {
   Student * ptr1 = (Student *) arg1; 
   Student * ptr2 = (Student *) arg2;  
-  int val1 = (*ptr1).ID; 
-  int val2 = (*ptr2).ID;
-  if (val1 < val2)  { return -1; }
-  if (val1 == val2) { return 0; }
-  return 1;
+  return ((ptr1 -> ID) - (ptr2 -> ID));
 } 
  
  void StudentSortbyID(Student * stu, int numelem)
@@ -119,7 +117,7 @@ int comparefuncint(const void * arg1, const void * arg2)
 #endif
 
 #ifdef TEST_SORTFIRSTNAME
- int cmpstring(const void *arg1, const void *arg2)
+ int cmpstring1(const void *arg1, const void *arg2)
 {
   Student * ptr1 = (Student *) arg1; 
   Student * ptr2 = (Student *) arg2; 
@@ -128,7 +126,7 @@ int comparefuncint(const void * arg1, const void * arg2)
 
 void StudentSortbyFirstName(Student * stu, int numelem)
 {
-  qsort(stu, numelem, sizeof(Student), cmpstring);
+  qsort(stu, numelem, sizeof(Student), cmpstring1);
 }
 #endif
 

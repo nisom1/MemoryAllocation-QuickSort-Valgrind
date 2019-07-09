@@ -21,9 +21,9 @@ int main(int argc, char * * argv)
 
   // read students from the input file
   // return EXIT_FAILURE if reading fails
-  char value;
-  value = StudentRead(argv[1], arr, numelem);
-  if (value == 'false')
+  bool value;
+  value = StudentRead(argv[1], &arr, &numelem);
+  if (value == false)
     return EXIT_FAILURE;
 
   // sort the students by IDs
@@ -32,7 +32,7 @@ int main(int argc, char * * argv)
   // write the result to the output (name is argv[2])
   // return EXIT_FAILURE if writing fails
   value = StudentWrite(argv[2], arr, numelem);
-  if (value == 'false')
+  if (value == false)
     return EXIT_FAILURE;
 
 
@@ -42,17 +42,16 @@ int main(int argc, char * * argv)
   // write the result to the output (name is argv[3])
   // return EXIT_FAILURE if writing fails
   value = StudentWrite(argv[3], arr, numelem);
-  if (value == 'false')
+  if (value == false)
     return EXIT_FAILURE;
 
   // sort the students by last names
   StudentSortbyLastName(arr, numelem);
 
-
   // write the result to the output (name is argv[4])
   // return EXIT_FAILURE if writing fails
   value = StudentWrite(argv[4], arr, numelem);
-  if (value == 'false')
+  if (value == false)
     return EXIT_FAILURE;
 
   // release allocated memory
