@@ -12,16 +12,15 @@ int main(int argc, char * * argv)
   // argv[3]: output file name, sorted by first name
   // argv[4]: output file name, sorted by last name
   if (argc < 5)
-    {
-      return EXIT_FAILURE;
-    }
+    { return EXIT_FAILURE;}
+  
   // create the necessary variables
   Student * arr;
   int numelem;
 
   // read students from the input file
   // return EXIT_FAILURE if reading fails
-  bool value;
+  bool value = true;
   value = StudentRead(argv[1], &arr, &numelem);
   if (value == false)
     return EXIT_FAILURE;

@@ -32,19 +32,18 @@ bool StudentRead(char * filename, Student * * stu, int * numelem)
   FILE * fptr = fopen(filename, "r");
    if (fptr == NULL)
     {
-      return false; // if fopen fails, return false
+      return 0; // if fopen fails, return false
     } // do not use fclose since fopen already fails
 
   // count the number of lines to determine the number of students
-  
-  char character = fgetc(fptr);
-  int numLines;
-  while (character != EOF){
-    if(character == '\n')
-      numLines++;
+  int ch;
+  int numLines = 1; // start at 1 because the last line doesn't have a '\n' so we need to account for that 
+  while ((ch = fgetc(fptr)) != EOF){
+      if (ch == '\n'){
+        numLines++;
+    }
   }
-  
-  numelem = &numLines; // not the right dereference-r
+  *numelem = numLines;
   
   // return to the beginning of the file
   // you can use fseek or
@@ -52,7 +51,7 @@ bool StudentRead(char * filename, Student * * stu, int * numelem)
   // You need to check whether fseek or fopen fails
   // Do not use rewind because it does not report whether it fails
   fclose(fptr);
-  fptr = fopen(filename, "r");
+  FILE * newfptr = fopen(filename, "r");
 
  // allocate memory for the data
   (*stu) = malloc(sizeof(Student) * (*numelem));
@@ -63,12 +62,12 @@ bool StudentRead(char * filename, Student * * stu, int * numelem)
   return EXIT_FAILURE;
 
   // read the data from the file and store the data in the allocated memory
-  int i = 0;
+  int i;
   for( i = 0; i < (*numelem); i++){
-   fscanf(fptr, "%d %s %s\n", &stu[i]->ID, stu[i]->firstname, stu[i]->lastname);
+   fscanf(newfptr, "%d %s %s\n", &stu[i]->ID, stu[i]->firstname, stu[i]->lastname);
 }
   // close the file
-  fclose(fptr);
+  fclose(newfptr);
 
   return true;
 }
@@ -83,7 +82,7 @@ bool StudentRead(char * filename, Student * * stu, int * numelem)
 
 bool StudentWrite(char * filename, Student * stu, int numelem)
 {
-   // open the file to read
+   // open the file to write
   FILE * outptr = fopen(filename, "w");
    if (outptr == NULL)
     {
@@ -94,8 +93,7 @@ bool StudentWrite(char * filename, Student * stu, int numelem)
   int i = 0;
   for( i = 0; i < numelem; i++){
    fprintf(outptr, "%d %s %s\n", stu[i].ID, stu[i].firstname, stu[i].lastname);
-
-}
+   }
   fclose(outptr);
   return true;
 }
@@ -106,7 +104,13 @@ int comparefuncint(const void * arg1, const void * arg2)
 {
   Student * ptr1 = (Student *) arg1; 
   Student * ptr2 = (Student *) arg2;  
-  return ((ptr1 -> ID) - (ptr2 -> ID));
+  
+  if( (ptr1->ID) < (ptr2->ID) )
+	return -1;
+  else if( (ptr1->ID) == (ptr2->ID) )
+	return 0;
+  else
+	return 1;
 } 
  
  void StudentSortbyID(Student * stu, int numelem)
