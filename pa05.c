@@ -16,7 +16,7 @@ int main(int argc, char * * argv)
   
   // create the necessary variables
   Student * arr;
-  int numelem;
+  int numelem = 0;
 
   // read students from the input file
   // return EXIT_FAILURE if reading fails

@@ -1,7 +1,7 @@
 # You need to write this file so that
 CFLAGS = -g -Wall -std=c99 -g -Wall -Wshadow --pedantic -Wvla -Werror
-COVFLAGS = -fprofile-arcs -ftest-coverage
-PROFFLAG = -pg
+#COVFLAGS = -fprofile-arcs -ftest-coverage
+# PROFFLAG = -pg
 DFLAGS = -DTEST_READ -DTEST_WRITE -DTEST_SORTID -DTEST_SORTFIRSTNAME -DTEST_SORTLASTNAME
 VALS = valgrind --tool=memcheck --leak-check=full 
 GCC = gcc #$(CFLAGS) $(COVFLAGS) $(PROFFLAG)

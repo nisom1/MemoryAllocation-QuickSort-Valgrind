@@ -23,6 +23,9 @@ bool StudentWrite(char * filename, Student * stu, int numelem);
 void StudentSortbyID(Student * stu, int numelem);
 void StudentSortbyFirstName(Student * stu, int numelem);
 void StudentSortbyLastName(Student * stu, int numelem);
+int comparefuncint(const void * arg1, const void * arg2); 
+int cmpstring1(const void *arg1, const void *arg2);
+int cmpstring(const void *arg1, const void *arg2);
 
 // function already impelemented for you
 void StudentPrint(Student * stu, int num);

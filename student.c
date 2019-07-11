@@ -29,15 +29,15 @@ void StudentPrint(Student * stu, int num)
 bool StudentRead(char * filename, Student * * stu, int * numelem)
 {
   // open the file to read
-  FILE * fptr = fopen(filename, "r");
+   FILE * fptr = fopen(filename, "r");
    if (fptr == NULL)
     {
       return 0; // if fopen fails, return false
-    } // do not use fclose since fopen already fails
+    } //do not use fclose since fopen already fails
 
   // count the number of lines to determine the number of students
-  int ch;
-  int numLines = 1; // start at 1 because the last line doesn't have a '\n' so we need to account for that 
+  char ch;
+  int numLines = 0; // start at 1 because the last line doesn't have a '\n' so we need to account for that 
   while ((ch = fgetc(fptr)) != EOF){
       if (ch == '\n'){
         numLines++;
@@ -51,10 +51,14 @@ bool StudentRead(char * filename, Student * * stu, int * numelem)
   // You need to check whether fseek or fopen fails
   // Do not use rewind because it does not report whether it fails
   fclose(fptr);
-  FILE * newfptr = fopen(filename, "r");
+  fptr = fopen(filename, "r");
+    if (fptr == NULL)
+    { 
+      return 0; // if foeen fails, return false
+    } // do not use fclose since fopen already fails
 
  // allocate memory for the data
-  (*stu) = malloc(sizeof(Student) * (*numelem));
+  (*stu) = malloc(sizeof(Student) * (numLines));
   
   // check whether memory allocation fails
   
@@ -63,11 +67,15 @@ bool StudentRead(char * filename, Student * * stu, int * numelem)
 
   // read the data from the file and store the data in the allocated memory
   int i;
-  for( i = 0; i < (*numelem); i++){
-   fscanf(newfptr, "%d %s %s\n", &stu[i]->ID, stu[i]->firstname, stu[i]->lastname);
+  for( i = 0; i < (numLines); i++){
+    fscanf(fptr,"%d %s %s\n", &(((*stu)[i]).ID), ((*stu)[i]).firstname, ((*stu)[i]).lastname);
 }
-  // close the file
-  fclose(newfptr);
+  /* close the file
+  for (i = 0; i < numLines; i++)
+  { 
+    printf(fptr,"%d %s %s\n", &(((*stu)[i]).ID), ((*stu)[i]).firstname, ((*stu)[i]).lastname);
+  } */ 
+  fclose(fptr);
 
   return true;
 }
@@ -87,12 +95,12 @@ bool StudentWrite(char * filename, Student * stu, int numelem)
    if (outptr == NULL)
     {
       return false; // if fopen fails, return false
-    } // do not use fclose since fopen already fails
+  }   // do not use fclose since fopen already fails
 
   // write the students to the output file  
   int i = 0;
   for( i = 0; i < numelem; i++){
-   fprintf(outptr, "%d %s %s\n", stu[i].ID, stu[i].firstname, stu[i].lastname);
+    fprintf(outptr, "%d %s %s\n", ((stu[i]).ID), (stu[i]).firstname, (stu[i]).lastname);
    }
   fclose(outptr);
   return true;
@@ -105,23 +113,23 @@ int comparefuncint(const void * arg1, const void * arg2)
   Student * ptr1 = (Student *) arg1; 
   Student * ptr2 = (Student *) arg2;  
   
-  if( (ptr1->ID) < (ptr2->ID) )
-	return -1;
-  else if( (ptr1->ID) == (ptr2->ID) )
-	return 0;
+  if ( (ptr1->ID) < (ptr2->ID) )
+	{return -1;}
+  else if ( (ptr1->ID) == (ptr2->ID) )
+	{return 0;}
   else
-	return 1;
+	{return 1;}
 } 
  
- void StudentSortbyID(Student * stu, int numelem)
+void StudentSortbyID(Student * stu, int numelem)
 {
   qsort(stu, numelem, sizeof(Student), comparefuncint );
-
+  return;
 }
 #endif
 
 #ifdef TEST_SORTFIRSTNAME
- int cmpstring1(const void *arg1, const void *arg2)
+ int cmpstring1(const void *arg1,const void *arg2)
 {
   Student * ptr1 = (Student *) arg1; 
   Student * ptr2 = (Student *) arg2; 
@@ -131,6 +139,7 @@ int comparefuncint(const void * arg1, const void * arg2)
 void StudentSortbyFirstName(Student * stu, int numelem)
 {
   qsort(stu, numelem, sizeof(Student), cmpstring1);
+  return;
 }
 #endif
 
@@ -146,5 +155,6 @@ void StudentSortbyFirstName(Student * stu, int numelem)
 void StudentSortbyLastName(Student * stu, int numelem)
 {
   qsort(stu, numelem, sizeof(Student), cmpstring);
+  return;
 }
 #endif
